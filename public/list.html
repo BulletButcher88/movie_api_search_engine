@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>FILM DATABASE</title>
+    <link rel="stylesheet" href="./styles/list.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+          <h1>WATCHLIST</h1>
+          <a href="./index.html">SEARCH PAGE</a>
+      </nav>
+
+      <div class="movieList"></div>
+
+    </div>
+
+    <script>
+      const displayList = () => {
+        axios.get("http://localhost:3000/movie/all").then(response => {
+          const orderedList = document.querySelector(".movieList");
+          orderedList.innerHTML = "";
+          const list = response.data;
+          list.forEach(element => {
+            const movieCard = `
+          <div class="movie-card">
+          <h1> ${element.Title}</h1>
+          <img src="${element.Poster}" onerror="this.src='../images/NO_PHOTO_PROVIDED.jpg';">
+          <h1> ${element.Director}</h1>
+          <p> ${element.Plot}</p>
+          <p> ${element.Year}</p>
+          <button id="delete-btn" onclick="deleteMovie('${
+            element.imdbID
+          }')" type="${element.Title}">delete</button>
+
+            </div>`;
+
+            orderedList.insertAdjacentHTML("beforeend", movieCard);
+          });
+        });
+      };
+
+      const deleteMovie = id => {
+        console.log(id);
+        axios
+          .delete(`http://localhost:3000/movie/remove/` + id)
+          .then(response => {
+            console.log(response);
+            displayList();
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      };
+      displayList();
+    </script>
+  </body>
+</html>
