@@ -63,7 +63,6 @@ app.post('/movie/add', (req,res)=>{
   console.log(req.body)
   const { Title, Plot, Year, Director, Poster, imdbRating, imdbID } = req.body;
 
-
   Movie.create({ Title, Plot, Year, Director, Poster, imdbRating, imdbID, })
     .then(newMovie => {
       res.json(newMovie);
